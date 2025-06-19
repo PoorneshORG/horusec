@@ -9,7 +9,7 @@ on:
 
 jobs:
   secret-scan:
-    name: Secret Scan with Gitleaks
+    name: Horusec scan
     runs-on: ubuntu-latest
 
     steps:
