@@ -216,9 +216,19 @@ description = "Hardcoded Credential"
 regex = '''((?i)(set)?password\s*(.?=.?|\()\s*['"]\w+[[:print:]]*['"])|((?i)(set)?pass\s*(.?=.?|\()\s*['"]\w+[[:print:]]*['"])|((?i)(set)?pwd\s*(.?=.?|\()\s*['"]\w+[[:print:]]*['"])|((?i)(set)?passwd\s*(.?=.?|\()\s*['"]\w+[[:print:]]*['"])|((?i)(set)?senha\s*(.?=.?|\()\s*['"]\w+[[:print:]]*['"])|([a-zA-Z]{3,10}://[^/\s:@]{3,20}:[^/\s:@]{3,20}@.{1,100}/?.?)'''
 tags = ["key", "Hardcoded", "generic"]
 
-[allowlist]
+# [allowlist]
+# description = "Allowlisted files"
+# files = ['''^\.?gitleaks\.toml$''',
+#          '''(.*?)(png|jpg|gif|doc|docx|pdf|bin|xls|pyc|zip)$''',
+#          '''(go\.mod|go\.sum)$''']
+[[allowlists]]
 description = "Allowlisted files"
-files = ['''^\.?gitleaks\.toml$''',
-         '''(.*?)(png|jpg|gif|doc|docx|pdf|bin|xls|pyc|zip)$''',
-         '''(go\.mod|go\.sum)$''']
+paths = [
+  '''^\.?gitleaks\.toml$''',
+  '''(.*?)(png|jpg|gif|doc|docx|pdf|bin|xls|pyc|zip)$''',
+  '''(go\.mod|go\.sum)$'''
+]
 
+[[allowlists]]
+description = "Ignore /app/services folder"
+paths = ['^services/']
