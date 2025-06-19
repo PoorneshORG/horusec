@@ -3,23 +3,29 @@ name: SecurityPipeline
 on:
   push:
     branches:
-      - '**'  # All branches
+      - '**'
   pull_request:
     branches:
-      - '**'  # All PRs to any branch
-  workflow_dispatch:  # Optional: allows manual triggering via GitHub UI
+      - '**'
+  workflow_dispatch:
 
 jobs:
   horusec-security:
     name: horusec-security
     runs-on: ubuntu-latest
     steps:
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v3
+
+      - name: Check Docker version
+        run: docker --version
+
       - name: Check out code
         uses: actions/checkout@v2
         with:
-          fetch-depth: 0  # Required for full commit history
-          
-      - name: Running Horusec Security
+          fetch-depth: 0
+
+      - name: Install and run Horusec
         run: |
           curl -fsSL https://raw.githubusercontent.com/ZupIT/horusec/main/deployments/scripts/install.sh | bash -s latest
           horusec start -p="./" -e="true"
