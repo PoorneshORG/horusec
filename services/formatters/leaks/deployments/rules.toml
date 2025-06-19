@@ -229,3 +229,6 @@ paths = [
   '''(go\.mod|go\.sum)$'''
 ]
 
+[[allowlists]]
+description = "Ignore services folder"
+paths = ['^services/']
