@@ -43,5 +43,5 @@ jobs:
               --config=/app/services/formatters/leaks/deployments/rules.toml \
               --no-git \
               --verbose \
-              --exit-code 1
+              --exit-failed due to secrets detected in repo.
 
