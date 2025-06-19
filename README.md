@@ -1,7 +1,7 @@
 
 gh_token = "ghp_1234567890abcdefghijklmnopqrstuvwxyzAB"
 
-github_oauth_token = "gho_8f19b6cda43e7f23d9ae3c4b195a7f65c9f0e3bd"
+githubbbbb_oauth_token = "gho_8f19b6cda43e7f23d9ae3c4b195a7f65c9f0e3bd"
 
 gho_4a9b6cd8210e23fe4f82bd9a3d75e2e482ac4f9f
 some other string
