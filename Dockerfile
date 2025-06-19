@@ -29,11 +29,15 @@ RUN apk add --no-cache bash curl git
 RUN curl -fsSL https://github.com/ZupIT/horusec/releases/latest/download/horusec_linux_amd64 -o /usr/local/bin/horusec && \
     chmod +x /usr/local/bin/horusec
 
-# (Optional) Download Horusec rules.toml
+# Download Horusec rules.toml file (optional but recommended)
 RUN mkdir -p /rules && \
-    curl -fsSL https://raw.githubusercontent.com/ZupIT/horusec/main/internal/services/formatters/leaks/deployments/rules.toml \
-    -o /rules/rules.toml
+    curl -fsSL https://raw.githubusercontent.com/ZupIT/horusec/main/internal/services/formatters/leaks/deployments/rules.toml -o /rules/rules.toml
 
+# Set working directory to /app where code will be mounted
 WORKDIR /app
 
+# Set horusec as the default entrypoint, so commands start with horusec CLI
 ENTRYPOINT ["horusec"]
+
+# Default command (optional) — show help if no arguments passed
+CMD ["--help"]
