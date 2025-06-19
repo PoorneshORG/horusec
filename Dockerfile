@@ -16,22 +16,26 @@
 
 # COPY ./internal/services/formatters/leaks/deployments/rules.toml /rules/rules.toml
 
-# ENTRYPOINT []
+# # ENTRYPOINT []
 
-# CMD ["/bin/sh"]
+# # CMD ["/bin/sh"]
 
-# Use official Gitleaks image
+# # Use official Gitleaks image
+# FROM zricethezav/gitleaks:v8.27.2
+
+# # Copy custom rules file from your repository into the image
+# COPY ./services/formatters/leaks/deployments/rules.toml /rules/rules.toml
+
+# # Set the working directory to where code will be mounted during scan
+# WORKDIR /app
+
+# # Set Gitleaks as the default entrypoint
+# ENTRYPOINT ["gitleaks"]
+
+# # Default command: show help if no arguments are passed
+# CMD ["--help"]
+
 FROM zricethezav/gitleaks:v8.27.2
 
-# Copy custom rules file from your repository into the image
+# Copy your custom rules file into the image
 COPY ./services/formatters/leaks/deployments/rules.toml /rules/rules.toml
-
-# Set the working directory to where code will be mounted during scan
-WORKDIR /app
-
-# Set Gitleaks as the default entrypoint
-ENTRYPOINT ["gitleaks"]
-
-# Default command: show help if no arguments are passed
-CMD ["--help"]
-
