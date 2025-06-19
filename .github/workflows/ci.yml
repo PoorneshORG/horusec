@@ -32,7 +32,7 @@ jobs:
             --information-severity=true
 
       - name: Upload Horusec JSON report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: horusec-report
           path: horusec-report.json
