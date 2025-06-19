@@ -21,6 +21,18 @@ jobs:
         run: |
           curl -fsSL https://raw.githubusercontent.com/ZupIT/horusec/main/deployments/scripts/install.sh | bash -s latest
 
-      - name: Run Horusec scan without Docker
+      - name: Run Horusec scan without Docker, export JSON
         run: |
-          horusec start -p="./" -e="true" -D
+          horusec start \
+            -p="./" \
+            -D \
+            -e="false" \
+            --output-format="json" \
+            --json-output-file="horusec-report.json" \
+            --information-severity=true
+
+      - name: Upload Horusec JSON report
+        uses: actions/upload-artifact@v3
+        with:
+          name: horusec-report
+          path: horusec-report.json
