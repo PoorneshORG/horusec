@@ -30,13 +30,13 @@ jobs:
             start \
               -p="./" \
               -D \
-              -e="false" \
-              --output-format="json" \
-              --json-output-file="horusec-report.json" \
+              -e="true" \
+              # --output-format="json" \
+              # --json-output-file="horusec-report.json" \
               --information-severity=true
 
-      - name: Upload Horusec JSON report
-        uses: actions/upload-artifact@v4
-        with:
-          name: horusec-report
-          path: horusec-report.json
+      # - name: Upload Horusec JSON report
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: horusec-report
+      #     path: horusec-report.json
