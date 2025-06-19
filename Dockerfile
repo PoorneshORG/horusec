@@ -22,13 +22,14 @@
 
 FROM golang:1.20-alpine
 
-# Install dependencies
+# Install required packages
 RUN apk add --no-cache bash curl git
 
-# Install Horusec CLI
-RUN curl -fsSL https://raw.githubusercontent.com/ZupIT/horusec/main/deployments/scripts/install.sh | bash -s latest
+# Download and install Horusec CLI manually
+RUN curl -fsSL https://github.com/ZupIT/horusec/releases/latest/download/horusec_linux_amd64 -o /usr/local/bin/horusec && \
+    chmod +x /usr/local/bin/horusec
 
-# Optional: download rules.toml
+# (Optional) Download Horusec rules.toml
 RUN mkdir -p /rules && \
     curl -fsSL https://raw.githubusercontent.com/ZupIT/horusec/main/internal/services/formatters/leaks/deployments/rules.toml \
     -o /rules/rules.toml
