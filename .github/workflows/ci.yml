@@ -9,7 +9,7 @@ on:
 
 jobs:
   secret-scan:
-    name: Secret Scan with Gitleaks
+    name: Gitleaks-proxy
     runs-on: ubuntu-latest
 
     steps:
@@ -22,14 +22,14 @@ jobs:
         run: |
           docker build -t gitleaks-custom -f ./Dockerfile .
 
-      - name: Run Gitleaks with custom rules
+      - name: Run Gitleaks - custom rules
         run: |
           docker run --rm \
             -v ${{ github.workspace }}:/app \
             -w /app \
             gitleaks-custom detect \
               --source=/app \
-              --config=/rules/rules.toml \
+              --config=/app/rules.toml \
               --no-git \
               --verbose \
               --exit-code 1

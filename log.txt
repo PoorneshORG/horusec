@@ -1,4 +1,0 @@
-User 'admin' logged in from 192.168.1.1
-Error: Invalid password for 'root'
-
-
