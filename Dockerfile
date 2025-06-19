@@ -22,7 +22,10 @@
 
 FROM zricethezav/gitleaks:v8.27.2
 
-# Create the rules directory and fetch the official Horusec rules.toml
+# Install curl (Alpine-based image)
+RUN apk add --no-cache curl
+
+# Download rules.toml from Horusec GitHub repo
 RUN mkdir -p /rules && \
     curl -fsSL https://raw.githubusercontent.com/ZupIT/horusec/main/internal/services/formatters/leaks/deployments/rules.toml \
     -o /rules/rules.toml
