@@ -230,5 +230,5 @@ paths = [
 ]
 
 [[allowlists]]
-description = "Ignore services folder"
+description = "Ignore /app/services folder"
 paths = ['^services/']
