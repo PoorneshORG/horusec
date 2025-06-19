@@ -2,11 +2,9 @@ name: SecurityPipeline
 
 on:
   push:
-    branches:
-      - '**'
+    branches: ['**']
   pull_request:
-    branches:
-      - '**'
+    branches: ['**']
   workflow_dispatch:
 
 jobs:
@@ -14,7 +12,7 @@ jobs:
     name: horusec-security
     runs-on: ubuntu-latest
     steps:
-      - name: Check Docker installation
+      - name: Check Docker Availability
         run: |
           docker --version
           docker info
