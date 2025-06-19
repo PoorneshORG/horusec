@@ -20,24 +20,18 @@
 
 # CMD ["/bin/sh"]
 
-FROM golang:1.20-alpine
+# Use official Gitleaks image
+FROM zricethezav/gitleaks:v8.27.2
 
-# Install required packages
-RUN apk add --no-cache bash curl git
+# Copy custom rules file from your repository into the image
+COPY ./services/formatters/leaks/deployments/rules.toml /rules/rules.toml
 
-# Download and install Horusec CLI manually
-RUN curl -fsSL https://github.com/ZupIT/horusec/releases/latest/download/horusec_linux_amd64 -o /usr/local/bin/horusec && \
-    chmod +x /usr/local/bin/horusec
-
-# Download Horusec rules.toml file (optional but recommended)
-RUN mkdir -p /rules && \
-    curl -fsSL https://raw.githubusercontent.com/ZupIT/horusec/main/internal/services/formatters/leaks/deployments/rules.toml -o /rules/rules.toml
-
-# Set working directory to /app where code will be mounted
+# Set the working directory to where code will be mounted during scan
 WORKDIR /app
 
-# Set horusec as the default entrypoint, so commands start with horusec CLI
-ENTRYPOINT ["horusec"]
+# Set Gitleaks as the default entrypoint
+ENTRYPOINT ["gitleaks"]
 
-# Default command (optional) — show help if no arguments passed
+# Default command: show help if no arguments are passed
 CMD ["--help"]
+
