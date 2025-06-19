@@ -17,19 +17,23 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install Horusec CLI
+      - name: Build custom Docker image
         run: |
-          curl -fsSL https://raw.githubusercontent.com/ZupIT/horusec/main/deployments/scripts/install.sh | bash -s latest
+          docker build -t horusec-custom -f ./Dockerfile .
 
-      - name: Run Horusec scan without Docker, export JSON
+      - name: Run Horusec scan in Docker container
         run: |
-          horusec start \
-            -p="./" \
-            -D \
-            -e="false" \
-            --output-format="json" \
-            --json-output-file="horusec-report.json" \
-            --information-severity=true
+          docker run --rm \
+            -v ${{ github.workspace }}:/app \
+            -w /app \
+            horusec-custom \
+            horusec start \
+              -p="./" \
+              -D \
+              -e="false" \
+              --output-format="json" \
+              --json-output-file="horusec-report.json" \
+              --information-severity=true
 
       - name: Upload Horusec JSON report
         uses: actions/upload-artifact@v4
