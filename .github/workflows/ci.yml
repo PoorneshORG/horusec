@@ -27,7 +27,7 @@ jobs:
             -v ${{ github.workspace }}:/app \
             -w /app \
             horusec-custom \
-            horusec start \
+            start \
               -p="./" \
               -D \
               -e="false" \
