@@ -33,4 +33,3 @@ jobs:
               --no-git \
               --verbose \
               --exit-code 1
-
