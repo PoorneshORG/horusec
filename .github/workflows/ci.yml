@@ -8,35 +8,29 @@ on:
   workflow_dispatch:
 
 jobs:
-  horusec-security:
-    name: horusec-security
+  secret-scan:
+    name: Secret Scan with Gitleaks
     runs-on: ubuntu-latest
+
     steps:
       - name: Check out code
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
-      - name: Build custom Docker image
+      - name: Build Gitleaks Docker image with custom rules
         run: |
-          docker build -t horusec-custom -f ./Dockerfile .
+          docker build -t gitleaks-custom -f ./Dockerfile .
 
-      - name: Run Horusec scan in Docker container
+      - name: Run Gitleaks with custom rules
         run: |
           docker run --rm \
             -v ${{ github.workspace }}:/app \
             -w /app \
-            horusec-custom \
-            start \
-              -p="./" \
-              -D \
-              -e="true" \
-              # --output-format="json" \
-              # --json-output-file="horusec-report.json" \
-              --information-severity=true
+            gitleaks-custom detect \
+              --source=/app \
+              --config=/rules/rules.toml \
+              --no-git \
+              --verbose \
+              --exit-code 1
 
-      # - name: Upload Horusec JSON report
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: horusec-report
-      #     path: horusec-report.json
