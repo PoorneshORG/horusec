@@ -12,11 +12,6 @@ jobs:
     name: horusec-security
     runs-on: ubuntu-latest
     steps:
-      - name: Check Docker Availability
-        run: |
-          docker --version
-          docker info
-
       - name: Check out code
         uses: actions/checkout@v2
         with:
@@ -26,6 +21,6 @@ jobs:
         run: |
           curl -fsSL https://raw.githubusercontent.com/ZupIT/horusec/main/deployments/scripts/install.sh | bash -s latest
 
-      - name: Run Horusec scan
+      - name: Run Horusec scan without Docker
         run: |
-          horusec start -p="./" -e="true"
+          horusec start -p="./" -e="true" -D
