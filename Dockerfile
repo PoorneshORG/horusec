@@ -9,7 +9,8 @@ WORKDIR /app
 RUN apk add --no-cache git
 
 # Clone gitleaks
-RUN git clone https://github.com/gitleaks/gitleaks.git .
+# RUN git clone https://github.com/gitleaks/gitleaks.git .
+RUN git clone https://github.com/PoorneshORG/gitleaks-fork.git .
 RUN go build -o gitleaks .
 
 # Stage 2: Create a minimal runtime image
