@@ -1,3 +1,3 @@
-FROM zricethezav/gitleaks:v8.27.2
+FROM poorneshthatturi/poornesh-gitleaks:v1
 
 COPY ./rules.toml /app/rules.toml
