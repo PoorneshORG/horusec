@@ -18,9 +18,19 @@ jobs:
         with:
           fetch-depth: 0
 
+     # Step 2: Clone SecretScan repo with Dockerfile and rules.toml
+      - name: Clone SecretScan repo (Dockerfile + rules)
+        run: |
+          git clone --branch TESTING https://github.com/PoorneshORG/SecretScan.git secret-scan
+
       - name: Build Gitleaks Docker image with custom rules
         run: |
-          docker build -t gitleaks-custom -f ./Dockerfile .
+          docker build -t gitleaks-custom -f secret-scan/Dockerfile secret-scan
+  
+
+      # - name: Build Gitleaks Docker image with custom rules
+      #   run: |
+      #     docker build -t gitleaks-custom -f ./Dockerfile .
 
       - name: Run Gitleaks - custom rules
         run: |
@@ -29,7 +39,7 @@ jobs:
             -w /app \
             gitleaks-custom detect \
               --source=/app \
-              --config=/app/rules.toml \
+              --config=/app/secret-scan/rules.toml \
               --no-git \
               --verbose \
               --exit-code 1
