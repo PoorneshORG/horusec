@@ -40,6 +40,5 @@ jobs:
             gitleaks-custom detect \
               --source=/app \
               --config=/app/secret-scan/rules.toml \
-              --no-git \
               --verbose \
               --exit-code 1
