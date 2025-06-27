@@ -1,2 +1,1 @@
-# 1Password Secret Key
-a3-credential = "A3-ABCDEF-ABCDEFGHIJK-ABCDE-FGHIJ-KLMNO"
+
