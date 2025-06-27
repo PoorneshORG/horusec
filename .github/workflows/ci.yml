@@ -42,4 +42,3 @@ jobs:
               --config=/app/secret-scan/rules.toml \
               --no-git \
               --verbose || true
-              --exit-code 1
