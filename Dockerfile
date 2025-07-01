@@ -22,6 +22,9 @@ RUN apk add --no-cache ca-certificates
 # Copy binary from builder
 COPY --from=builder /app/gitleaks /usr/local/bin/gitleaks
 
+# Copy the gitleaks.toml config file
+COPY --from=builder /app/config/gitleaks.toml /etc/gitleaks.toml
+
 # Verify installation
 RUN gitleaks version
 
