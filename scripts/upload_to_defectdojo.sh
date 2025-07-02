@@ -7,7 +7,8 @@ DOJO_API_KEY=$2
 PRODUCT_NAME=$3
 SCAN_FILE=$4
 ENGAGEMENT_NAME=$5
-TEST_TITLE=${6:-"Gitleaks Scan"}
+# Default TEST_TITLE to repo-branch if not provided
+TEST_TITLE=${6:-"${GITHUB_REPOSITORY##*/}-${GITHUB_REF##*/}"}
 
 # Validation
 if [ -z "$DOJO_URL" ] || [ -z "$DOJO_API_KEY" ] || [ -z "$PRODUCT_NAME" ] || [ -z "$SCAN_FILE" ] || [ -z "$ENGAGEMENT_NAME" ]; then
@@ -25,7 +26,6 @@ AUTH_HEADER="Authorization: Token $DOJO_API_KEY"
 
 echo "📤 Uploading $SCAN_FILE to existing DefectDojo product='$PRODUCT_NAME', engagement='$ENGAGEMENT_NAME'..."
 
-# Directly upload scan assuming product and engagement exist, no creation logic
 curl -s -X POST "$DOJO_URL/api/v2/reimport-scan/" \
   -H "$AUTH_HEADER" \
   -F "scan_date=$DATE" \
