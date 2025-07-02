@@ -58,16 +58,19 @@ jobs:
               --no-git \
               --verbose \
               --exit-code 0 || true
-
-      - name: Upload Gitleaks findings to DefectDojo
-        env:
-          DEFECTDOJO_URL: ${{ secrets.DEFECTDOJO_URL }}
-          DEFECTDOJO_API_KEY: ${{ secrets.DEFECTDOJO_API_KEY }}
-          DEFECTDOJO_PRODUCT_TYPE_ID: ${{ secrets.DEFECTDOJO_PRODUCT_TYPE_ID }}
-        run: |
-          bash scripts/upload_to_defectdojo.sh \
-            "$DEFECTDOJO_URL" \
-            "$DEFECTDOJO_API_KEY" \
-            "${{ github.repository }}" \
-            "gitleaks-report.json" \
-            "$DEFECTDOJO_PRODUCT_TYPE_ID"
+              - name: Upload Gitleaks findings to DefectDojo
+              if: always()
+              env:
+                DEFECTDOJO_URL: ${{ secrets.DEFECTDOJO_URL }}
+                DEFECTDOJO_API_KEY: ${{ secrets.DEFECTDOJO_API_KEY }}
+                DEFECTDOJO_PRODUCT_NAME: ${{ github.repository }}       # or override with your secret
+                DEFECTDOJO_ENGAGEMENT_NAME: "gitleaks"                # set engagement name here
+              run: |
+                chmod +x scripts/upload_to_defectdojo.sh
+                ./scripts/upload_to_defectdojo.sh \
+                  "$DEFECTDOJO_URL" \
+                  "$DEFECTDOJO_API_KEY" \
+                  "$DEFECTDOJO_PRODUCT_NAME" \
+                  "gitleaks-report.json" \
+                  "$DEFECTDOJO_ENGAGEMENT_NAME"
+            
