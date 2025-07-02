@@ -45,7 +45,7 @@ jobs:
         env:
           DEFECTDOJO_URL: ${{ secrets.DEFECTDOJO_URL }}
           DEFECTDOJO_API_KEY: ${{ secrets.DEFECTDOJO_API_KEY }}
-          DEFECTDOJO_PRODUCT_NAME: ${{ github.repository }}
+          DEFECTDOJO_PRODUCT_NAME: DevSecOps
           DEFECTDOJO_ENGAGEMENT_NAME: "gitleaks"
 
         run: |
