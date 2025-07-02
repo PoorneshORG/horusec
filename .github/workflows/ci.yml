@@ -52,3 +52,5 @@ jobs:
             "${{ github.repository }}" \
             "gitleaks-report.json" \
             "$DEFECTDOJO_PRODUCT_TYPE_ID"
+
+            
