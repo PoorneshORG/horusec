@@ -47,6 +47,7 @@ jobs:
           DEFECTDOJO_API_KEY: ${{ secrets.DEFECTDOJO_API_KEY }}
           DEFECTDOJO_PRODUCT_NAME: ${{ github.repository }}
           DEFECTDOJO_ENGAGEMENT_NAME: "gitleaks"
+          DEFECTDOJO_PRODUCT_TYPE_NAME: "Research and Development"
         run: |
           chmod +x scripts/upload_to_defectdojo.sh
           ./scripts/upload_to_defectdojo.sh \
@@ -54,4 +55,6 @@ jobs:
             "$DEFECTDOJO_API_KEY" \
             "$DEFECTDOJO_PRODUCT_NAME" \
             "gitleaks-report.json" \
-            "$DEFECTDOJO_ENGAGEMENT_NAME"
+            "$DEFECTDOJO_ENGAGEMENT_NAME" \
+            "Gitleaks Scan" \
+            "$DEFECTDOJO_PRODUCT_TYPE_NAME"
