@@ -13,39 +13,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out code
+      - name: 🔄 Check out code
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
-      # Step 2: Clone SecretScan repo with Dockerfile and rules.toml
-      # Old image: git clone --branch TESTING https://github.com/PoorneshORG/SecretScan.git secret-scan
-      - name: Clone SecretScan repo (Dockerfile + rules)
+      - name: 📥 Clone SecretScan repo (Dockerfile + rules)
         run: |
           git clone --branch dockerwithrules https://github.com/PoorneshORG/SecretScan.git secret-scan
 
-      - name: Build Gitleaks Docker image with custom rules
+      - name: 🛠️ Build Gitleaks Docker image with custom rules
         run: |
           docker build -t gitleaks-custom -f secret-scan/Dockerfile secret-scan
-  
 
-      # - name: Build Gitleaks Docker image with custom rules
-      #   run: |
-      #     docker build -t gitleaks-custom -f ./Dockerfile .
-
-      # - name: Run Gitleaks - custom rules
-      #   run: |
-      #     docker run --rm \
-      #       -v ${{ github.workspace }}:/app \
-      #       -w /app \
-      #       gitleaks-custom detect \
-      #         --source=/app \
-      #         --config=/app/secret-scan/rules.toml \
-      #         --no-git \
-      #         --verbose \
-      #         --exit-code 1 || true
-      
-      - name: Run Gitleaks - custom rules (output to JSON)
+      - name: 🔍 Run Gitleaks - custom rules (output to JSON)
         run: |
           docker run --rm \
             -v ${{ github.workspace }}:/app \
@@ -58,19 +39,19 @@ jobs:
               --no-git \
               --verbose \
               --exit-code 0 || true
-              - name: Upload Gitleaks findings to DefectDojo
-              if: always()
-              env:
-                DEFECTDOJO_URL: ${{ secrets.DEFECTDOJO_URL }}
-                DEFECTDOJO_API_KEY: ${{ secrets.DEFECTDOJO_API_KEY }}
-                DEFECTDOJO_PRODUCT_NAME: ${{ github.repository }}       # or override with your secret
-                DEFECTDOJO_ENGAGEMENT_NAME: "gitleaks"                # set engagement name here
-              run: |
-                chmod +x scripts/upload_to_defectdojo.sh
-                ./scripts/upload_to_defectdojo.sh \
-                  "$DEFECTDOJO_URL" \
-                  "$DEFECTDOJO_API_KEY" \
-                  "$DEFECTDOJO_PRODUCT_NAME" \
-                  "gitleaks-report.json" \
-                  "$DEFECTDOJO_ENGAGEMENT_NAME"
-            
+
+      - name: 📤 Upload Gitleaks findings to DefectDojo
+        if: always()
+        env:
+          DEFECTDOJO_URL: ${{ secrets.DEFECTDOJO_URL }}
+          DEFECTDOJO_API_KEY: ${{ secrets.DEFECTDOJO_API_KEY }}
+          DEFECTDOJO_PRODUCT_NAME: ${{ github.repository }}
+          DEFECTDOJO_ENGAGEMENT_NAME: "gitleaks"
+        run: |
+          chmod +x scripts/upload_to_defectdojo.sh
+          ./scripts/upload_to_defectdojo.sh \
+            "$DEFECTDOJO_URL" \
+            "$DEFECTDOJO_API_KEY" \
+            "$DEFECTDOJO_PRODUCT_NAME" \
+            "gitleaks-report.json" \
+            "$DEFECTDOJO_ENGAGEMENT_NAME"
