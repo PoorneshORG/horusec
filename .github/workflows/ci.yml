@@ -58,4 +58,4 @@ jobs:
             "gitleaks-report.json" \
             "$DEFECTDOJO_ENGAGEMENT_NAME"
 
-            
+          
