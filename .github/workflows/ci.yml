@@ -22,7 +22,7 @@ jobs:
       # Old image: git clone --branch TESTING https://github.com/PoorneshORG/SecretScan.git secret-scan
       - name: Clone SecretScan repo (Dockerfile + rules)
         run: |
-          git clone --branch dockerwithrules https://github.com/PoorneshORG/SecretScan.git secret-scan
+          git clone --branch TESTING https://github.com/PoorneshORG/SecretScan.git secret-scan
 
       - name: Build Gitleaks Docker image with custom rules
         run: |
