@@ -34,7 +34,7 @@ curl -s -X POST "$DOJO_URL/api/v2/reimport-scan/" \
   -F "verified=true" \
   -F "product_name=$PRODUCT_NAME" \
   -F "engagement_name=$ENGAGEMENT_NAME" \
-  -F "test_title=$TEST_TITLE - $DATE" \
+  -F "test_title=$TEST_TITLE" \
   -F "auto_create_context=true" \
   -F "deduplication_on_engagement=true" \
   -F "close_old_findings=true" \
