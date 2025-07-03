@@ -6,8 +6,8 @@ DOJO_URL=$1
 DOJO_API_KEY=$2
 PRODUCT_NAME=$3
 SCAN_FILE=$4
-ENGAGEMENT_NAME=$5        # Will be repo name
-TEST_TITLE=$6             # Will be branch + commit ID
+ENGAGEMENT_NAME=$5        # Repo name
+TEST_TITLE=$6             # Branch + Commit ID
 
 # Validation
 if [ -z "$DOJO_URL" ] || [ -z "$DOJO_API_KEY" ] || [ -z "$PRODUCT_NAME" ] || [ -z "$SCAN_FILE" ] || [ -z "$ENGAGEMENT_NAME" ] || [ -z "$TEST_TITLE" ]; then
@@ -26,38 +26,41 @@ JSON_HEADER="Content-Type: application/json"
 
 echo "📤 Uploading $SCAN_FILE to DefectDojo product='$PRODUCT_NAME', engagement='$ENGAGEMENT_NAME'..."
 
-# Get product ID
+# Get Product ID
 PRODUCT_ID=$(curl -s -H "$AUTH_HEADER" "$DOJO_URL/api/v2/products/?name=$PRODUCT_NAME" | jq -r '.results[0].id')
-
 if [ -z "$PRODUCT_ID" ] || [ "$PRODUCT_ID" == "null" ]; then
-  echo "❌ Product '$PRODUCT_NAME' not found. Please ensure it exists."
+  echo "❌ Product '$PRODUCT_NAME' not found."
   exit 1
 fi
 
 echo "✅ Product ID: $PRODUCT_ID"
 
-# Create new engagement (named by repo)
-echo "➕ Creating engagement: $ENGAGEMENT_NAME"
-ENGAGEMENT_ID=$(curl -s -X POST "$DOJO_URL/api/v2/engagements/" \
-  -H "$AUTH_HEADER" -H "$JSON_HEADER" \
-  -d "{
-        \"product\": $PRODUCT_ID,
-        \"name\": \"$ENGAGEMENT_NAME\",
-        \"target_start\": \"$DATE\",
-        \"target_end\": \"$DATE\",
-        \"status\": \"In Progress\",
-        \"engagement_type\": \"CI/CD\"
-      }" | jq -r '.id')
+# Check if engagement already exists
+ENGAGEMENT_ID=$(curl -s -H "$AUTH_HEADER" "$DOJO_URL/api/v2/engagements/?product=$PRODUCT_ID&name=$ENGAGEMENT_NAME" | jq -r '.results[0].id')
 
-if [ -z "$ENGAGEMENT_ID" ] || [ "$ENGAGEMENT_ID" == "null" ]; then
-  echo "❌ Failed to create engagement."
-  exit 1
+if [ "$ENGAGEMENT_ID" == "null" ] || [ -z "$ENGAGEMENT_ID" ]; then
+  echo "➕ Creating new engagement: $ENGAGEMENT_NAME"
+  ENGAGEMENT_ID=$(curl -s -X POST "$DOJO_URL/api/v2/engagements/" \
+    -H "$AUTH_HEADER" -H "$JSON_HEADER" \
+    -d "{
+      \"product\": $PRODUCT_ID,
+      \"name\": \"$ENGAGEMENT_NAME\",
+      \"target_start\": \"$DATE\",
+      \"target_end\": \"$DATE\",
+      \"status\": \"In Progress\",
+      \"engagement_type\": \"CI/CD\"
+    }" | jq -r '.id')
+
+  if [ -z "$ENGAGEMENT_ID" ] || [ "$ENGAGEMENT_ID" == "null" ]; then
+    echo "❌ Failed to create engagement."
+    exit 1
+  fi
+else
+  echo "✅ Engagement '$ENGAGEMENT_NAME' already exists with ID $ENGAGEMENT_ID"
 fi
 
-echo "✅ Engagement ID: $ENGAGEMENT_ID"
-
-# Upload scan
-echo "📤 Reimporting scan..."
+# Upload the scan
+echo "📤 Reimporting scan into engagement..."
 curl -s -X POST "$DOJO_URL/api/v2/reimport-scan/" \
   -H "$AUTH_HEADER" \
   -F "scan_date=$DATE" \
