@@ -6,11 +6,12 @@ DOJO_URL=$1
 DOJO_API_KEY=$2
 PRODUCT_NAME=$3
 SCAN_FILE=$4
-TEST_TITLE=${5:-"Gitleaks Scan"}
+ENGAGEMENT_NAME=$5        # Will be repo name
+TEST_TITLE=$6             # Will be branch + commit ID
 
 # Validation
-if [ -z "$DOJO_URL" ] || [ -z "$DOJO_API_KEY" ] || [ -z "$PRODUCT_NAME" ] || [ -z "$SCAN_FILE" ]; then
-  echo "Usage: $0 <DOJO_URL> <DOJO_API_KEY> <PRODUCT_NAME> <SCAN_FILE> [TEST_TITLE]"
+if [ -z "$DOJO_URL" ] || [ -z "$DOJO_API_KEY" ] || [ -z "$PRODUCT_NAME" ] || [ -z "$SCAN_FILE" ] || [ -z "$ENGAGEMENT_NAME" ] || [ -z "$TEST_TITLE" ]; then
+  echo "Usage: $0 <DOJO_URL> <DOJO_API_KEY> <PRODUCT_NAME> <SCAN_FILE> <ENGAGEMENT_NAME> <TEST_TITLE>"
   exit 1
 fi
 
@@ -23,7 +24,7 @@ DATE=$(date +%F)
 AUTH_HEADER="Authorization: Token $DOJO_API_KEY"
 JSON_HEADER="Content-Type: application/json"
 
-echo "📤 Uploading $SCAN_FILE to DefectDojo product='$PRODUCT_NAME'..."
+echo "📤 Uploading $SCAN_FILE to DefectDojo product='$PRODUCT_NAME', engagement='$ENGAGEMENT_NAME'..."
 
 # Get product ID
 PRODUCT_ID=$(curl -s -H "$AUTH_HEADER" "$DOJO_URL/api/v2/products/?name=$PRODUCT_NAME" | jq -r '.results[0].id')
@@ -35,10 +36,8 @@ fi
 
 echo "✅ Product ID: $PRODUCT_ID"
 
-# Create new engagement
-ENGAGEMENT_NAME="$TEST_TITLE - $(date +%s)"
-echo "➕ Creating new engagement: $ENGAGEMENT_NAME"
-
+# Create new engagement (named by repo)
+echo "➕ Creating engagement: $ENGAGEMENT_NAME"
 ENGAGEMENT_ID=$(curl -s -X POST "$DOJO_URL/api/v2/engagements/" \
   -H "$AUTH_HEADER" -H "$JSON_HEADER" \
   -d "{

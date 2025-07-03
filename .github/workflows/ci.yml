@@ -48,9 +48,16 @@ jobs:
           DEFECTDOJO_PRODUCT_NAME: DevSecOps
         run: |
           chmod +x scripts/upload_to_defectdojo.sh
+
+          REPO_NAME=$(basename "${{ github.repository }}")
+          BRANCH_NAME=$(echo "${{ github.ref_name }}")
+          COMMIT_ID=$(echo "${{ github.sha }}" | cut -c1-7)
+          TEST_TITLE="${BRANCH_NAME}-${COMMIT_ID}"
+
           ./scripts/upload_to_defectdojo.sh \
             "$DEFECTDOJO_URL" \
             "$DEFECTDOJO_API_KEY" \
             "$DEFECTDOJO_PRODUCT_NAME" \
             "gitleaks-report.json" \
-            "${{ github.repository }}-${{ github.ref_name }}"
+            "$REPO_NAME" \
+            "$TEST_TITLE"
