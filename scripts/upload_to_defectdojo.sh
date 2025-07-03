@@ -6,13 +6,11 @@ DOJO_URL=$1
 DOJO_API_KEY=$2
 PRODUCT_NAME=$3
 SCAN_FILE=$4
-ENGAGEMENT_NAME=$5
-# Default TEST_TITLE to repo-branch if not provided
-TEST_TITLE=${6:-"${GITHUB_REPOSITORY##*/}-${GITHUB_REF##*/}"}
+TEST_TITLE=${5:-"Gitleaks Scan"}
 
 # Validation
-if [ -z "$DOJO_URL" ] || [ -z "$DOJO_API_KEY" ] || [ -z "$PRODUCT_NAME" ] || [ -z "$SCAN_FILE" ] || [ -z "$ENGAGEMENT_NAME" ]; then
-  echo "Usage: $0 <DOJO_URL> <DOJO_API_KEY> <PRODUCT_NAME> <SCAN_FILE> <ENGAGEMENT_NAME> [TEST_TITLE]"
+if [ -z "$DOJO_URL" ] || [ -z "$DOJO_API_KEY" ] || [ -z "$PRODUCT_NAME" ] || [ -z "$SCAN_FILE" ]; then
+  echo "Usage: $0 <DOJO_URL> <DOJO_API_KEY> <PRODUCT_NAME> <SCAN_FILE> [TEST_TITLE]"
   exit 1
 fi
 
@@ -23,9 +21,44 @@ fi
 
 DATE=$(date +%F)
 AUTH_HEADER="Authorization: Token $DOJO_API_KEY"
+JSON_HEADER="Content-Type: application/json"
 
-echo "📤 Uploading $SCAN_FILE to existing DefectDojo product='$PRODUCT_NAME', engagement='$ENGAGEMENT_NAME'..."
+echo "📤 Uploading $SCAN_FILE to DefectDojo product='$PRODUCT_NAME'..."
 
+# Get product ID
+PRODUCT_ID=$(curl -s -H "$AUTH_HEADER" "$DOJO_URL/api/v2/products/?name=$PRODUCT_NAME" | jq -r '.results[0].id')
+
+if [ -z "$PRODUCT_ID" ] || [ "$PRODUCT_ID" == "null" ]; then
+  echo "❌ Product '$PRODUCT_NAME' not found. Please ensure it exists."
+  exit 1
+fi
+
+echo "✅ Product ID: $PRODUCT_ID"
+
+# Create new engagement
+ENGAGEMENT_NAME="$TEST_TITLE - $(date +%s)"
+echo "➕ Creating new engagement: $ENGAGEMENT_NAME"
+
+ENGAGEMENT_ID=$(curl -s -X POST "$DOJO_URL/api/v2/engagements/" \
+  -H "$AUTH_HEADER" -H "$JSON_HEADER" \
+  -d "{
+        \"product\": $PRODUCT_ID,
+        \"name\": \"$ENGAGEMENT_NAME\",
+        \"target_start\": \"$DATE\",
+        \"target_end\": \"$DATE\",
+        \"status\": \"In Progress\",
+        \"engagement_type\": \"CI/CD\"
+      }" | jq -r '.id')
+
+if [ -z "$ENGAGEMENT_ID" ] || [ "$ENGAGEMENT_ID" == "null" ]; then
+  echo "❌ Failed to create engagement."
+  exit 1
+fi
+
+echo "✅ Engagement ID: $ENGAGEMENT_ID"
+
+# Upload scan
+echo "📤 Reimporting scan..."
 curl -s -X POST "$DOJO_URL/api/v2/reimport-scan/" \
   -H "$AUTH_HEADER" \
   -F "scan_date=$DATE" \
@@ -34,7 +67,7 @@ curl -s -X POST "$DOJO_URL/api/v2/reimport-scan/" \
   -F "verified=true" \
   -F "product_name=$PRODUCT_NAME" \
   -F "engagement_name=$ENGAGEMENT_NAME" \
-  -F "test_title=$TEST_TITLE" \
+  -F "test_title=$TEST_TITLE - $DATE" \
   -F "auto_create_context=true" \
   -F "deduplication_on_engagement=true" \
   -F "close_old_findings=true" \
