@@ -10,4 +10,4 @@ on:
 jobs:
   secret-scan:
     name: Gitleaks-proxy
-    uses: ./.github/workflows/secret-scan.yml
+    uses: PoorneshORG/SecretScan/.github/workflows/secretscan.yml@main
