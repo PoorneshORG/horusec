@@ -20,7 +20,7 @@ jobs:
 
       # Step 2: Clone SecretScan repo with Dockerfile and rules.toml
       # Old image: git clone --branch TESTING https://github.com/PoorneshORG/SecretScan.git secret-scan
-      - name: Use reusable action
+      - name: SecretScan reusable action
         uses: poorneshORG/SecretScan@main
         with:
           workspace: ${{ github.workspace }}
