@@ -22,3 +22,5 @@ jobs:
       # Old image: git clone --branch TESTING https://github.com/PoorneshORG/SecretScan.git secret-scan
       - name: Use reusable action
         uses: poorneshORG/SecretScan@main
+        with:
+          workspace: ${{ github.workspace }}
