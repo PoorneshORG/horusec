@@ -1,26 +1,6 @@
-name: SecurityPipeline
-
-on:
-  push:
-    branches: ['**']
-  pull_request:
-    branches: ['**']
-  workflow_dispatch:
-
 jobs:
   secret-scan:
     name: Gitleaks-proxy
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
-      # Step 2: Clone SecretScan repo with Dockerfile and rules.toml
-      # Old image: git clone --branch TESTING https://github.com/PoorneshORG/SecretScan.git secret-scan
-      - name: SecretScan reusable action
-        uses: poorneshORG/SecretScan@main
-        with:
-          workspace: ${{ github.workspace }}
+    uses: ./.github/workflows/secret-scan.yml
+    with:
+      workspace: ${{ github.workspace }}
