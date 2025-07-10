@@ -9,14 +9,6 @@ on:
 
 jobs:
   secret-scan:
-    name: Gitleaks-proxy
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Check out the code
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
-      - name: Call reusable SecretScan workflow
-        uses: PoorneshORG/SecretScan/.github/workflows/secretscan.yml@main
+    uses: PoorneshORG/SecretScan/.github/workflows/secretscan.yml@main
+    with:
+      fetch-depth: 0 # Optional: pass any input if needed in reusable workflow
