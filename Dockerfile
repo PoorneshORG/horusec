@@ -1,5 +1,5 @@
 # Stage 1: Build the gitleaks binary
-FROM golang:1.22-alpine AS builder
+FROM golang:1.23-alpine AS builder
 
 ENV GOTOOLCHAIN=auto
 
@@ -14,7 +14,7 @@ RUN git clone https://github.com/PoorneshORG/gitleaks-fork.git .
 RUN go build -o gitleaks .
 
 # Stage 2: Create a minimal runtime image
-FROM alpine:3.19
+FROM alpine:3.20
 
 # Add ca-certificates if needed
 RUN apk add --no-cache ca-certificates
